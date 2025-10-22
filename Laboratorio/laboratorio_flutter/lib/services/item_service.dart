@@ -2,11 +2,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/item.dart';
 
-// 🚨🚨 ¡MUY IMPORTANTE! REEMPLAZA ESTA URL CON TU URL REAL DE RENDER 
-const String BASE_URL = 'https://mi-flutter-api.onrender.com/api/items'; 
+// 🚨🚨 ¡MUY IMPORTANTE! REEMPLAZA ESTA URL CON TU URL REAL DE RENDER
+const String BASE_URL = 'https://render-8oyn.onrender.com/api/items';
 
 class ItemService {
-  
   // ==========================================================
   // 1. GET (READ)
   // ==========================================================
@@ -15,7 +14,9 @@ class ItemService {
 
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
-      return jsonResponse.map((item) => Item.fromMap(item as Map<String, dynamic>)).toList();
+      return jsonResponse
+          .map((item) => Item.fromMap(item as Map<String, dynamic>))
+          .toList();
     } else {
       throw Exception('Fallo al cargar los ítems.');
     }
@@ -25,8 +26,12 @@ class ItemService {
   // 2. POST (CREATE)
   // ==========================================================
   Future<Item> createItem(String name, String description) async {
-    final newItemData = Item(name: name, description: description, createdAt: DateTime.now());
-    
+    final newItemData = Item(
+      name: name,
+      description: description,
+      createdAt: DateTime.now(),
+    );
+
     final response = await http.post(
       Uri.parse(BASE_URL),
       headers: <String, String>{
@@ -41,17 +46,18 @@ class ItemService {
       throw Exception('Fallo al crear el ítem. Status: ${response.statusCode}');
     }
   }
-  
+
   // ==========================================================
   // 3. DELETE (DELETE)
   // ==========================================================
   Future<void> deleteItem(String id) async {
-    final url = '$BASE_URL/$id'; 
+    final url = '$BASE_URL/$id';
     final response = await http.delete(Uri.parse(url));
 
     if (response.statusCode != 200) {
-      throw Exception('Fallo al eliminar el ítem. Status: ${response.statusCode}');
+      throw Exception(
+        'Fallo al eliminar el ítem. Status: ${response.statusCode}',
+      );
     }
   }
 }
-
